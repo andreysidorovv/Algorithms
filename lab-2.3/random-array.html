@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Array Operations with Sorting</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        input, button, select {
+            margin: 5px 0;
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Array Operations with Sorting</h1>
+        <label for="arraySize">Array Size:</label>
+        <input type="number" id="arraySize" min="1" value="10">
+        <button onclick="createRandomArray()">Create Random Array</button>
+        <button onclick="duplicateArray()">Duplicate Array</button>
+
+        <h2>Array:</h2>
+        <textarea id="arrayDisplay" readonly></textarea>
+
+        <h3>Sorting</h3>
+        <label for="sortingAlgorithm">Choose Sorting Algorithm:</label>
+        <select id="sortingAlgorithm">
+            <option value="insertionSort">Insertion Sort</option>
+            <option value="selectionSort">Selection Sort</option>
+            <option value="mergeSort">Merge Sort</option>
+            <option value="quickSort">Quick Sort</option>
+        </select>
+        <button onclick="sortArray()">Sort Array</button>
+
+        <h3>Sorted Array:</h3>
+        <textarea id="sortedArrayDisplay" readonly></textarea>
+    </div>
+
+    <script src="random-array.js"></script>
+</body>
+</html>
