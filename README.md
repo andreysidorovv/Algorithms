@@ -1,1 +1,1 @@
-Oh brother this guy is stinks!
+Oh brother, this guy is stinks!
