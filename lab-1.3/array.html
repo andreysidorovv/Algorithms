@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="array.css">
+    <title>Array Operations</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Array Operations</h1>
+        <label for="arraySize">Array Size:</label>
+        <input type="number" id="arraySize" min="1" value="10">
+        <button onclick="createRandomArray()">Create Random Array</button>
+        <button onclick="createSortedArray()">Create Sorted Array</button>
+
+        <h2>Array:</h2>
+        <textarea id="arrayDisplay" readonly></textarea>
+
+        <h3>Operations</h3>
+        <label for="searchValue">Search Value:</label>
+        <input type="number" id="searchValue">
+        <button onclick="searchArray()">Search</button>
+        <button onclick="binarySearchArray()">Binary Search (sorted only)</button>
+        <br>
+
+        <label for="insertValue">Insert Value:</label>
+        <input type="number" id="insertValue">
+        <button onclick="insertValue()">Insert</button>
+        <br>
+
+        <label for="deleteValue">Delete Value:</label>
+        <input type="number" id="deleteValue">
+        <button onclick="deleteValue()">Delete</button>
+
+        <h3>Result:</h3>
+        <textarea id="resultDisplay" readonly></textarea>
+    </div>
+
+    <script src="array.js"></script>
+</body>
+</html>
