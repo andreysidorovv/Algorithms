@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heap Operations</title>
+    <style>
+        .heap {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .node {
+            border: 1px solid black;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <input type="number" id="heapSize" placeholder="Enter heap size">
+    <button onclick="createHeap()">Create Heap</button>
+    <br>
+    <input type="text" id="inputValue" placeholder="Enter value">
+    <button onclick="insert()">Insert</button>
+    <button onclick="search()">Search</button>
+    <button onclick="remove()">Remove</button>
+    <button onclick="heapSort()">Heap Sort</button>
+    <div class="heap" id="heap"></div>
+    <div class="heap" id="sortedArray"></div>
+
+    <script>
+        class Heap {
+            constructor() {
+                this.heap = [];
+            }
+
+            getParentIndex(index) {
+                return Math.floor((index - 1) / 2);
+            }
+
+            getLeftChildIndex(index) {
+                return 2 * index + 1;
+            }
+
+            getRightChildIndex(index) {
+                return 2 * index + 2;
+            }
+
+            insert(value) {
+                this.heap.push(value);
+                this.heapifyUp();
+                this.drawHeap();
+            }
+
+            heapifyUp() {
+                let index = this.heap.length - 1;
+                while (this.getParentIndex(index) >= 0 && this.heap[this.getParentIndex(index)] < this.heap[index]) {
+                    this.swap(this.getParentIndex(index), index);
+                    index = this.getParentIndex(index);
+                }
+            }
+
+            remove(value) {
+                const index = this.heap.indexOf(value);
+                if (index !== -1) {
+                    this.swap(index, this.heap.length - 1);
+                    const removedValue = this.heap.pop();
+                    this.heapifyDown(index);
+                    this.drawHeap();
+                    return removedValue;
+                }
+                return null;
+            }
+
+            heapifyDown(index) {
+                let largest = index;
+                const leftChildIndex = this.getLeftChildIndex(index);
+                const rightChildIndex = this.getRightChildIndex(index);
+
+                if (leftChildIndex < this.heap.length && this.heap[leftChildIndex] > this.heap[largest]) {
+                    largest = leftChildIndex;
+                }
+
+                if (rightChildIndex < this.heap.length && this.heap[rightChildIndex] > this.heap[largest]) {
+                    largest = rightChildIndex;
+                }
+
+                if (largest !== index) {
+                    this.swap(largest, index);
+                    this.heapifyDown(largest);
+                }
+            }
+
+            search(value) {
+                return this.heap.includes(value);
+            }
+
+            swap(index1, index2) {
+                const temp = this.heap[index1];
+                this.heap[index1] = this.heap[index2];
+                this.heap[index2] = temp;
+            }
+
+            drawHeap() {
+                const heapElement = document.getElementById('heap');
+                heapElement.innerHTML = '';
+                this.heap.forEach(value => {
+                    const nodeElement = document.createElement('div');
+                    nodeElement.classList.add('node');
+                    nodeElement.innerText = value;
+                    heapElement.appendChild(nodeElement);
+                });
+            }
+
+            heapSort() {
+                const originalHeap = [...this.heap]; // Copy the original heap
+                const sortedArray = [];
+
+                while (this.heap.length > 0) {
+                    sortedArray.push(this.removeMax());
+                }
+
+                this.heap = originalHeap; // Restore the original heap
+                this.drawHeap();
+
+                const sortedElement = document.getElementById('sortedArray');
+                sortedElement.innerHTML = '';
+                sortedArray.forEach(value => {
+                    const nodeElement = document.createElement('div');
+                    nodeElement.classList.add('node');
+                    nodeElement.innerText = value;
+                    sortedElement.appendChild(nodeElement);
+                });
+            }
+
+            removeMax() {
+                const max = this.heap[0];
+                this.heap[0] = this.heap.pop();
+                this.heapifyDown(0);
+                return max;
+            }
+        }
+
+        let heap;
+
+        function createHeap() {
+            heap = new Heap();
+            heap.drawHeap();
+        }
+
+        function insert() {
+            const value = parseInt(document.getElementById('inputValue').value);
+            if (!isNaN(value) && heap) {
+                heap.insert(value);
+            } else {
+                alert('Please enter a valid number and create the heap first.');
+            }
+        }
+
+        function search() {
+            const value = parseInt(document.getElementById('inputValue').value);
+            if (!isNaN(value) && heap) {
+                const found = heap.search(value);
+                if (found) {
+                    alert('Element found in the heap.');
+                } else {
+                    alert('Element not found in the heap.');
+                }
+            } else {
+                alert('Please enter a valid number and create the heap first.');
+            }
+        }
+
+        function remove() {
+            const value = parseInt(document.getElementById('inputValue').value);
+            if (!isNaN(value) && heap) {
+                const removed = heap.remove(value);
+                if (removed !== null) {
+                    alert('Element removed from the heap.');
+                } else {
+                    alert('Element not found in the heap.');
+                }
+            } else {
+                alert('Please enter a valid number and create the heap first.');
+            }
+        }
+
+        function heapSort() {
+            if (heap) {
+                heap.heapSort();
+            } else {
+                alert('Please create the heap first.');
+            }
+        }
+    </script>
+</body>
+</html>

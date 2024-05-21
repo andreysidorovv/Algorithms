@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binary Tree and Red-Black Tree</title>
+    <style>
+        .tree {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .node {
+            border: 1px solid black;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <input type="text" id="inputValue">
+    <button onclick="insert()">Insert</button>
+    <button onclick="search()">Search</button>
+    <button onclick="remove()">Remove</button>
+    <div class="tree" id="binaryTree"></div>
+    <div class="tree" id="redBlackTree"></div>
+
+    <script>
+        class Node {
+            constructor(value) {
+                this.value = value;
+                this.left = null;
+                this.right = null;
+            }
+        }
+
+        class BinaryTree {
+            constructor() {
+                this.root = null;
+            }
+
+            insert(value) {
+                const newNode = new Node(value);
+                if (!this.root) {
+                    this.root = newNode;
+                } else {
+                    this.insertNode(this.root, newNode);
+                }
+                this.drawTree('binaryTree', this.root);
+            }
+
+            insertNode(node, newNode) {
+                if (newNode.value < node.value) {
+                    if (!node.left) {
+                        node.left = newNode;
+                    } else {
+                        this.insertNode(node.left, newNode);
+                    }
+                } else {
+                    if (!node.right) {
+                        node.right = newNode;
+                    } else {
+                        this.insertNode(node.right, newNode);
+                    }
+                }
+            }
+
+            drawTree(elementId, node) {
+                const treeElement = document.getElementById(elementId);
+                treeElement.innerHTML = '';
+                this.drawNode(treeElement, node);
+            }
+
+            drawNode(parentElement, node) {
+                if (!node) return;
+                const nodeElement = document.createElement('div');
+                nodeElement.classList.add('node');
+                nodeElement.innerText = node.value;
+                parentElement.appendChild(nodeElement);
+                this.drawNode(parentElement, node.left);
+                this.drawNode(parentElement, node.right);
+            }
+
+            search(value) {
+                return this.searchNode(this.root, value);
+            }
+
+            searchNode(node, value) {
+                if (!node) return false;
+                if (node.value === value) return true;
+                if (value < node.value) {
+                    return this.searchNode(node.left, value);
+                } else {
+                    return this.searchNode(node.right, value);
+                }
+            }
+
+            remove(value) {
+                this.root = this.removeNode(this.root, value);
+                this.drawTree('binaryTree', this.root);
+            }
+
+            removeNode(node, value) {
+                if (!node) return null;
+                if (value === node.value) {
+                    // Удаление узла
+                    if (!node.left && !node.right) return null; // Узел без потомков
+                    if (!node.left) return node.right; // Узел с одним потомком (правым)
+                    if (!node.right) return node.left; // Узел с одним потомком (левым)
+                    // Узел с двумя потомками
+                    const minRight = this.findMinNode(node.right);
+                    node.value = minRight.value;
+                    node.right = this.removeNode(node.right, minRight.value);
+                    return node;
+                } else if (value < node.value) {
+                    node.left = this.removeNode(node.left, value);
+                    return node;
+                } else {
+                    node.right = this.removeNode(node.right, value);
+                    return node;
+                }
+            }
+
+            findMinNode(node) {
+                if (!node.left) return node;
+                return this.findMinNode(node.left);
+            }
+        }
+
+        class RedBlackTree extends BinaryTree {
+            constructor() {
+                super();
+            }
+            // Добавьте реализацию красно-чёрного дерева здесь
+        }
+
+        const binaryTree = new BinaryTree();
+        const redBlackTree = new RedBlackTree();
+
+        function insert() {
+            const value = document.getElementById('inputValue').value;
+            if (value !== '') {
+                binaryTree.insert(parseInt(value));
+                redBlackTree.insert(parseInt(value)); // Для красно-чёрного дерева
+            }
+        }
+
+        function search() {
+            const value = document.getElementById('inputValue').value;
+            if (value !== '') {
+                const found = binaryTree.search(parseInt(value));
+                if (found) {
+                    alert('Узел найден в бинарном дереве.');
+                } else {
+                    alert('Узел не найден в бинарном дереве.');
+                }
+            }
+        }
+
+        function remove() {
+            const value = document.getElementById('inputValue').value;
+            if (value !== '') {
+                binaryTree.remove(parseInt(value));
+                redBlackTree.remove(parseInt(value));
+            }
+        }
+    </script>
+</body>
+</html>

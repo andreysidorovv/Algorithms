@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hash Table</title>
+</head>
+<body>
+    <input type="number" id="tableSize" placeholder="Enter table size">
+    <button onclick="createTable()">Create Table</button>
+    <br>
+    <input type="text" id="inputValue" placeholder="Enter value">
+    <button onclick="insert()">Insert</button>
+    <button onclick="search()">Search</button>
+    <button onclick="remove()">Remove</button>
+    <br>
+    <label for="hashFunction">Select Hash Function:</label>
+    <select id="hashFunction">
+        <option value="hashFunction1">Hash Function 1</option>
+        <option value="hashFunction2">Hash Function 2</option>
+    </select>
+    <label for="probingMethod">Select Probing Method:</label>
+    <select id="probingMethod">
+        <option value="linearProbing">Linear Probing</option>
+        <option value="quadraticProbing">Quadratic Probing</option>
+    </select>
+    <div id="hashTable"></div>
+
+    <script>
+        class HashTable {
+            constructor(size, hashFunction, probingMethod) {
+                this.size = size;
+                this.table = new Array(size).fill(null);
+                this.hashFunction = hashFunction;
+                this.probingMethod = probingMethod;
+            }
+
+            hashFunction1(key) {
+                let hash = 0;
+                for (let i = 0; i < key.length; i++) {
+                    hash = (hash + key.charCodeAt(i)) % this.size;
+                }
+                return hash;
+            }
+
+            hashFunction2(key) {
+                let hash = 1;
+                for (let i = 0; i < key.length; i++) {
+                    hash = (hash * key.charCodeAt(i)) % this.size;
+                }
+                return hash;
+            }
+
+            hash(key) {
+                if (this.hashFunction === 'hashFunction1') {
+                    return this.hashFunction1(key);
+                } else {
+                    return this.hashFunction2(key);
+                }
+            }
+
+            linearProbing(hash, i) {
+                return (hash + i) % this.size;
+            }
+
+            quadraticProbing(hash, i) {
+                return (hash + i * i) % this.size;
+            }
+
+            probing(hash, i) {
+                if (this.probingMethod === 'linearProbing') {
+                    return this.linearProbing(hash, i);
+                } else {
+                    return this.quadraticProbing(hash, i);
+                }
+            }
+
+            insert(key) {
+                let hash = this.hash(key);
+                let i = 0;
+                while (this.table[this.probing(hash, i)] !== null && this.table[this.probing(hash, i)] !== key) {
+                    i++;
+                }
+                this.table[this.probing(hash, i)] = key;
+                this.drawTable();
+            }
+
+            search(key) {
+                let hash = this.hash(key);
+                let i = 0;
+                while (this.table[this.probing(hash, i)] !== null) {
+                    if (this.table[this.probing(hash, i)] === key) {
+                        alert('Element found');
+                        return true;
+                    }
+                    i++;
+                }
+                alert('Element not found');
+                return false;
+            }
+
+            remove(key) {
+                let hash = this.hash(key);
+                let i = 0;
+                while (this.table[this.probing(hash, i)] !== null) {
+                    if (this.table[this.probing(hash, i)] === key) {
+                        this.table[this.probing(hash, i)] = null;
+                        this.drawTable();
+                        alert('Element removed');
+                        return true;
+                    }
+                    i++;
+                }
+                alert('Element not found');
+                return false;
+            }
+
+            drawTable() {
+                const tableElement = document.getElementById('hashTable');
+                tableElement.innerHTML = '';
+                for (let i = 0; i < this.size; i++) {
+                    const cell = document.createElement('div');
+                    cell.style.border = '1px solid black';
+                    cell.style.display = 'inline-block';
+                    cell.style.width = '40px';
+                    cell.style.height = '40px';
+                    cell.style.textAlign = 'center';
+                    cell.style.verticalAlign = 'middle';
+                    cell.style.lineHeight = '40px';
+                    cell.innerText = this.table[i];
+                    tableElement.appendChild(cell);
+                }
+            }
+        }
+
+        let hashTable;
+
+        function createTable() {
+            const size = document.getElementById('tableSize').value;
+            const hashFunction = document.getElementById('hashFunction').value;
+            const probingMethod = document.getElementById('probingMethod').value;
+            if (size > 0) {
+                hashTable = new HashTable(parseInt(size), hashFunction, probingMethod);
+                hashTable.drawTable();
+            } else {
+                alert('Please enter a valid table size');
+            }
+        }
+
+        function insert() {
+            const value = document.getElementById('inputValue').value;
+            if (value !== '' && hashTable) {
+                hashTable.insert(value);
+            } else {
+                alert('Please create the table first or enter a valid value');
+            }
+        }
+
+        function search() {
+            const value = document.getElementById('inputValue').value;
+            if (value !== '' && hashTable) {
+                hashTable.search(value);
+            } else {
+                alert('Please create the table first or enter a valid value');
+            }
+        }
+
+        function remove() {
+            const value = document.getElementById('inputValue').value;
+            if (value !== '' && hashTable) {
+                hashTable.remove(value);
+            } else {
+                alert('Please create the table first or enter a valid value');
+            }
+        }
+    </script>
+</body>
+</html>
